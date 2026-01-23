@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO | Global Impact</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* --- CSS STYLING (Base from Part 1, Colors from Part 2) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        /* Updated Background Color to match Part 2 */
+        body { 
+            background-color: #0A1128; 
+            color: #fff; 
+            overflow-x: auto; 
+            scroll-behavior: smooth; 
+        }
+
+        /* Fixed Canvas for Background */
+        #mesh-canvas { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            z-index: -1; 
+            display: block;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%; background: rgba(35, 37, 40, 0.9);
+            position: fixed; width: 100%; z-index: 1000; border-bottom: 1px solid #333;
+        }
+
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: #3678c6; } /* Updated to Cyan */
+
+        .nav-links a {
+            color: #0A1128; text-decoration: none; margin-left: 20px;
+            font-size: 0.85rem; transition: 0.3s; text-transform: uppercase;
+        }
+
+        .nav-links a:hover { color: #3678c6; }
+
+        .donate-btn {
+            background: #b0ca87; padding: 10px 22px !important;
+            border-radius: 30px; color: white !important; font-weight: bold;
+            box-shadow: 0 0 20px rgba(248, 247, 247, 0.5);
+        }
+
+        /* Hero Section */
+        #hero {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            background: transparent;
+            pointer-events: none; /* Let clicks pass through to canvas if needed */
+        }
+
+        #hero h1 { font-size: 5rem; margin-bottom: 10px; text-shadow: 0 0 30px #3678c6; }
+        #hero p { font-size: 1.2rem; color: #888; letter-spacing: 3px; text-transform: uppercase; }
+
+        /* Content Sections */
+        section { padding: 100px 10%; min-height: 80vh; border-bottom: 1px solid #333; background: rgba(35, 37, 40, 0.7); backdrop-filter: blur(2px); }
+        h2 { font-size: 2.5rem; margin-bottom: 30px; color: #3678c6; }
+        p { line-height: 1.8; color: #ccc; max-width: 800px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px; }
+        .card { background: #1a1c1e; padding: 30px; border: 1px solid #333; border-radius: 10px; transition: 0.3s; }
+        .card:hover { border-color: #3678c6; transform: translateY(-5px); }
+        .card h3 { color: #fff; margin-bottom: 10px; }
+
+        footer { padding: 50px 10%; background: #1a1c1e; text-align: center; color: #555; font-size: 0.8rem; }
+
+        #webcam { display: none; }
+        
+        #loading {
+            position: fixed; bottom: 20px; right: 20px;
+            color: #3678c6ff; font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 0.1em; animation: pulse 1.5s infinite; z-index: 999;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+
+    <div id="loading">Initializing Neural Grid...</div>
+    <canvas id="mesh-canvas"></canvas>
+    <video id="webcam" autoplay playsinline></video>
+
+    <nav>
+        <div class="logo">E collective</div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#shop">Shop</a>
+            <a href="#members">Members</a>
+            <a href="#events">Events</a>
+            <a href="#resources">Resources</a>
+            <a href="#donate" class="donate-btn">Donate Now</a>
+        </div>
+    </nav>
+
+    <div id="hero">
+        <h1>Making a Difference</h1>
+        <p>Interactive Digital Fabric</p>
+    </div>
+
+    <section id="about">
+        <h2>About Our Mission</h2>
+        <p>We are a global non-profit dedicated to bridging the digital divide. By combining technology with grassroots activism, we ensure that every community has the resources to thrive in the 21st century.</p>
+    </section>
+
+    <section id="projects">
+        <h2>Current Projects</h2>
+        <div class="grid">
+            <div class="card"><h3>Clean Water AI</h3><p>Using sensors to monitor well health in remote areas.</p></div>
+            <div class="card"><h3>Digital Literacy</h3><p>Providing hardware and training to underserved schools.</p></div>
+            <div class="card"><h3>Green Grid</h3><p>Sustainable energy solutions for local community centers.</p></div>
+        </div>
+    </section>
+
+    <section id="shop">
+        <h2>NGO Shop</h2>
+        <div class="grid">
+            <div class="card"><h3>Impact Tee</h3><p>$25.00 - All profits go to projects.</p></div>
+            <div class="card"><h3>Eco-Bottle</h3><p>$15.00 - Reduce plastic waste.</p></div>
+        </div>
+    </section>
+
+    <section id="members">
+        <h2>Our Members</h2>
+        <p>Join 5,000+ global advocates making change every single day.</p>
+    </section>
+
+    <section id="events">
+        <h2>Upcoming Events</h2>
+        <div class="card"><h3>Global Gala 2026</h3><p>January 25th - Virtual Attendance Available.</p></div>
+    </section>
+
+    <section id="resources">
+        <h2>Resources</h2>
+        <p>Download our annual impact reports and transparency documents.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Info</h2>
+        <p>Email: contact@ngo-core.org</p>
+        <p>Location: Digital Nomad Hub, Cloud City</p>
+    </section>
+
+    <footer>© 2026 E collective. Powered by MediaPipe & Three.js</footer>
+
+    <script>
+        /* --- JAVASCRIPT LOGIC (Merged) --- */
+        
+        // --- CONFIGURATION (From Part 2) ---
+        const CONFIG = {
+            segmentsX: 70,         // Higher res for smoother waves
+            segmentsY: 40,         // Increased Y segments for full page coverage
+            color: 0x3678c6,       // Cyan
+            cameraZ: 30,           // Camera distance
+            brushRadius: 8.0,      // Interaction radius
+            brushStrength: 1.1,    // Interaction height
+            decay: 0.99,           // How fast bumps sink (0.90 - 0.99)
+            waveSpeed: 1.2,
+            waveHeight: 0.7
+        };
+
+        // --- GLOBALS ---
+        const canvas = document.getElementById('mesh-canvas');
+        const videoElement = document.getElementById('webcam');
+        let scene, camera, renderer, mesh;
+        let elevationData = [];
+        let worldWidth, worldHeight;
+        let fingerPos = { x: 0, y: 0, active: false };
+
+        // --- 1. THREE.JS SCENE SETUP ---
+        function initThree() {
+            scene = new THREE.Scene();
+            // Background color matches CSS body color
+            scene.background = new THREE.Color(0x232528); 
+
+            // Camera setup
+            const fov = 45;
+            camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, CONFIG.cameraZ); 
+            camera.lookAt(0, 0, 0);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Calculate Visible Size at z=0 to fill screen
+            const vFOV = (camera.fov * Math.PI) / 180;
+            const visibleHeight = 2 * Math.tan(vFOV / 2) * CONFIG.cameraZ;
+            const visibleWidth = visibleHeight * camera.aspect;
+
+            // Make geometry larger than visible area to ensure no borders ever appear
+            worldWidth = visibleWidth * 1.5; 
+            worldHeight = visibleHeight * 1.5;
+
+            const geometry = new THREE.PlaneGeometry(worldWidth, worldHeight, CONFIG.segmentsX, CONFIG.segmentsY);
+
+            // Initialize elevation buffer
+            const vertexCount = geometry.attributes.position.count;
+            elevationData = new Float32Array(vertexCount).fill(0);
+
+            // Material
+            const material = new THREE.MeshBasicMaterial({
+                color: CONFIG.color,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide
+            });
+
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+        }
+
+        // --- 2. MEDIAPIPE LOGIC (Hand Tracking) ---
+        function onResults(results) {
+            const loading = document.getElementById('loading');
+            if (loading && results.multiHandLandmarks) loading.style.display = 'none';
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                const indexTip = landmarks[8]; // Index finger tip
+
+                // Map 0..1 to World Coordinates based on actual Mesh Size
+                const currentWidth = worldWidth * mesh.scale.x;
+                const currentHeight = worldHeight * mesh.scale.y;
+
+                // X is inverted in MediaPipe relative to screen space usually
+                const x = (1 - indexTip.x) * currentWidth - (currentWidth / 2);
+                // Y is inverted (0 is top in MP, but +Y is top in 3D)
+                const y = (1 - indexTip.y) * currentHeight - (currentHeight / 2);
+
+                fingerPos.x = x;
+                fingerPos.y = y;
+                fingerPos.active = true;
+            } else {
+                fingerPos.active = false;
+            }
+        }
+
+        function initMediaPipe() {
+            const hands = new Hands({locateFile: (file) => {
+                return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+            }});
+
+            hands.setOptions({
+                maxNumHands: 1,
+                modelComplexity: 1,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+
+            hands.onResults(onResults);
+
+            const cameraHandler = new Camera(videoElement, {
+                onFrame: async () => {
+                    await hands.send({image: videoElement});
+                },
+                width: 640,
+                height: 480
+            });
+            cameraHandler.start();
+        }
+
+        // --- 3. ANIMATION LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = performance.now() / 1000;
+            const positions = mesh.geometry.attributes.position.array;
+            const count = mesh.geometry.attributes.position.count;
+
+            const scaleX = mesh.scale.x;
+            const scaleY = mesh.scale.y;
+
+            for (let i = 0; i < count; i++) {
+                const px = positions[i * 3];
+                const py = positions[i * 3 + 1];
+
+                // Real-world position of vertex
+                const worldPx = px * scaleX;
+                const worldPy = py * scaleY;
+
+                // Ambient Wave
+                const waveZ = Math.sin(worldPx * 0.4 + time * CONFIG.waveSpeed) * Math.cos(worldPy * 0.4 + time * CONFIG.waveSpeed) * CONFIG.waveHeight;
+
+                // Interaction (Ripple Effect)
+                if (fingerPos.active) {
+                    const dx = worldPx - fingerPos.x;
+                    const dy = worldPy - fingerPos.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < CONFIG.brushRadius) {
+                        const influence = (1 - dist / CONFIG.brushRadius);
+                        elevationData[i] += influence * CONFIG.brushStrength;
+                    }
+                }
+
+                // Decay and Clamp
+                elevationData[i] *= CONFIG.decay;
+                
+                // Apply Z
+                positions[i * 3 + 2] = waveZ + elevationData[i];
+            }
+
+            mesh.geometry.attributes.position.needsUpdate = true;
+            renderer.render(scene, camera);
+        }
+
+        // --- 4. RESIZE HANDLER ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Recalculate scale to keep grid filling the screen
+            const vFOV = (camera.fov * Math.PI) / 180;
+            const visibleHeight = 2 * Math.tan(vFOV / 2) * CONFIG.cameraZ;
+            const visibleWidth = visibleHeight * camera.aspect;
+            
+            const targetScaleX = (visibleWidth * 1.5) / worldWidth;
+            const targetScaleY = (visibleHeight * 1.5) / worldHeight;
+            
+            mesh.scale.set(targetScaleX, targetScaleY, 1);
+        });
+
+        // --- INITIALIZATION ---
+        initThree();
+        initMediaPipe();
+        animate();
+
+    </script>
+</body>
+</html>

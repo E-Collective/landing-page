@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mesh</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #050505; }
+        #webcam { display: none; }
+        canvas { display: block; }
+        #info {
+            position: absolute; top: 20px; width: 100%; text-align: center;
+            color: #00ffcc; font-family: monospace; pointer-events: none; z-index: 10;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+</head>
+<body>
+
+    <div id="info">Draw with finger </div>
+    
+    <video id="webcam" playsinline></video>
+    <canvas id="mesh-canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('mesh-canvas');
+        const videoElement = document.getElementById('webcam');
+        
+        let handX = -999, handY = -999; 
+        
+        // --- 1. SCENE SETUP ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 25; 
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // --- 2. CREATE MESH & MEMORY BUFFER ---
+        // We use 80x60 segments. 
+        // We need a way to remember the "drawn" state of each of these points.
+        const segX = 80;
+        const segY = 60;
+        const geometry = new THREE.PlaneGeometry(60, 40, segX, segY);
+        
+        // This array will hold the persistent "drawing" height for every vertex
+        const drawingBuffer = new Float32Array(geometry.attributes.position.count).fill(0);
+
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x00ccff, 
+            wireframe: true, 
+            transparent: true, 
+            opacity: 0.4, 
+            side: THREE.DoubleSide
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.rotation.x = 0; 
+        scene.add(mesh);
+
+        // --- 3. HAND TRACKING ---
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+        });
+
+        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5 });
+        
+        hands.onResults((results) => {
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const point = results.multiHandLandmarks[0][8]; 
+                handX = -(point.x - 0.5) * 60;
+                handY = -(point.y - 0.5) * 40;
+            } else {
+                handX = -999; handY = -999;
+            }
+        });
+
+        const cameraHandler = new Camera(videoElement, {
+            onFrame: async () => { await hands.send({ image: videoElement }); },
+            width: 640, height: 480
+        });
+        cameraHandler.start();
+
+        // --- 4. ANIMATION LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.0005; 
+            const pos = mesh.geometry.attributes.position.array;
+            
+            // Loop through every vertex (point) on the mesh
+            for (let i = 0; i < pos.length; i += 3) {
+                const x = pos[i];
+                const y = pos[i + 1];
+                const index = i / 3; // The index in our drawingBuffer
+
+                // A. CALCULATE DISTANCE TO HAND
+                const dist = Math.sqrt(Math.pow(x - handX, 2) + Math.pow(y - handY, 2));
+
+                // B. DRAWING LOGIC (The Brush)
+                // If hand is close (radius 3), ADD height to the buffer
+                if (dist < 3) {
+                    const strength = (3 - dist) * 0.5; 
+                    drawingBuffer[index] += strength;
+                    
+                    // Clamp max height so it doesn't grow infinitely if you hold still
+                    if (drawingBuffer[index] > 8) drawingBuffer[index] = 8;
+                }
+
+                // animation speed 
+                drawingBuffer[index] *= 0.9985; 
+
+                // D. COMBINE: Background Wave + Drawing
+                // Base slow wave
+                const baseWave = Math.sin(x * 0.05 + time) * 1.5 + Math.cos(y * 0.05 + time) * 1.5;
+                
+                // Apply final Z position
+                pos[i + 2] = baseWave + drawingBuffer[index];
+            }
+            
+            mesh.geometry.attributes.position.needsUpdate = true;
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

@@ -139,6 +139,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+/* JavaScript to handle mouse movement for variable font animation */
+document.addEventListener("mousemove", (event) => {
+    const h1 = document.querySelector("#hero h1");
+    if (!h1) return;
+    
+    const { clientX, clientY } = event;
+    const { innerWidth, innerHeight } = window;
+
+    // Calculate weight based on horizontal mouse position (100-900 for Inter)
+    const weight = Math.round((clientX / innerWidth) * 800 + 100);
+
+    // Calculate letter-spacing based on vertical mouse position (up = looser, down = tighter)
+    const spacing = (0.3 - (clientY / innerHeight) * 0.35).toFixed(3);
+
+    h1.style.fontVariationSettings = `"wght" ${weight}`;
+    h1.style.letterSpacing = `${spacing}em`;
+});
+
 initThree();
 initMediaPipe();
 animate();

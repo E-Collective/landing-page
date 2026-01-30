@@ -121,10 +121,14 @@ nav {
 }
 
 #hero h1 {
+  font-family: 'Inter', var(--global-font);
   font-size: clamp(3rem, 10vw, 6rem);
   margin-bottom: 10px;
   color: #fff;
   text-shadow: 0 0 40px var(--dark-glass);
+  transition: font-variation-settings 0.1s ease-out, letter-spacing 0.1s ease-out;
+  font-variation-settings: "wght" 500;
+  letter-spacing: 0em;
 }
 #hero p {
   font-size: 1rem;

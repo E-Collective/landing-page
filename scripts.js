@@ -127,6 +127,18 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+// --- MOBILE MENU NAVIGATION LOGIC --- //
+
+document.addEventListener("DOMContentLoaded", () => {
+  const hamburger = document.querySelector(".hamburger");
+  const navLinks = document.querySelector(".nav-links");
+
+  hamburger.addEventListener("click", () => {
+    navLinks.classList.toggle("mobile");
+    navLinks.classList.toggle("active");
+  });
+});
+
 initThree();
 initMediaPipe();
 animate();

@@ -8,8 +8,11 @@
 
   /* new colors */
   --ash-brown: #685044;
+  --dusty-olive: #747446;
   --palm-leaf: #809848;
+  --olive-green: #98b168;
   --muted-olive: #b0ca87;
+  --pacific-blue: #73a1a7;
   --twitter-blue: #3678c6;
   --yale-blue: #204577;
   --prussian-blue: #0a1128;
@@ -17,7 +20,6 @@
   --charcoal-blue: #343b4e;
   --blue-slate: #464d5e;
   --slate-gray: #575d6d;
-  /*     #20273c, #747446, , #98b168, , #73a1a7  */
 }
 
 * {
@@ -235,6 +237,46 @@ footer {
   font-size: 0.8rem;
 }
 
+/* --- Hamburger Menu --- */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.hamburger div {
+  width: 25px;
+  height: 3px;
+  background-color: var(--text-main);
+  margin: 4px 0;
+  transition: 0.4s;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: row;
+}
+
+.nav-links.mobile {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 5%;
+  background: var(--glass-bg);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-links.mobile a {
+  margin: 10px 0;
+}
+
+.nav-links.mobile.active {
+  display: flex;
+}
+
 @media (max-width: 768px) {
   #hero h1 {
     font-size: 3rem;
@@ -245,6 +287,11 @@ footer {
   nav {
     padding: 15px 5%;
   }
+
+  .hamburger {
+    display: flex;
+  }
+
   .nav-links {
     display: none;
   } /* Simplified for demo */

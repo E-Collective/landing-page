@@ -111,12 +111,13 @@ nav {
 
 /* --- 5. CONTENT SECTIONS (Part 1 Integration) --- */
 section {
-  padding: 120px 10%;
+  padding: 120px 5%; /* Reduced padding to prevent content overflow */
   position: relative;
   z-index: 1;
   background: rgba(5, 17, 26, 0.6);
   backdrop-filter: blur(4px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden; /* Prevent content from overflowing */
 }
 
 .about-intro {
@@ -143,7 +144,10 @@ section {
 /* Grid & Cards */
 .content-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(280px, 1fr)
+  ); /* Reduced min-width to prevent overflow */
   gap: 30px;
 }
 
@@ -231,4 +235,13 @@ footer {
   .nav-links {
     display: none;
   } /* Simplified for demo */
+  section {
+    padding: 80px 5%; /* Adjust padding for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: 60px 5%; /* Adjust padding for mobile */
+  }
 }

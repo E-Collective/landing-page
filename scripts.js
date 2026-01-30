@@ -127,7 +127,7 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// --- MOBILE MENU NAVIGATION LOGIC --- //
+/* --- MOBILE MENU NAVIGATION LOGIC --- */
 
 document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.querySelector(".hamburger");
@@ -139,22 +139,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-/* JavaScript to handle mouse movement for variable font animation */
+/* --- VARIABLE FONT ANIMATION --- */
 document.addEventListener("mousemove", (event) => {
-    const h1 = document.querySelector("#hero h1");
-    if (!h1) return;
-    
-    const { clientX, clientY } = event;
-    const { innerWidth, innerHeight } = window;
+  const h1 = document.querySelector("#hero h1");
+  if (!h1) return;
 
-    // Calculate weight based on horizontal mouse position (100-900 for Inter)
-    const weight = Math.round((clientX / innerWidth) * 800 + 100);
+  const { clientX, clientY } = event;
+  const { innerWidth, innerHeight } = window;
 
-    // Calculate letter-spacing based on vertical mouse position (up = looser, down = tighter)
-    const spacing = (0.3 - (clientY / innerHeight) * 0.35).toFixed(3);
+  // Calculate weight based on horizontal mouse position (100-900 for Inter)
+  const weight = Math.round((clientX / innerWidth) * 800 + 100);
 
-    h1.style.fontVariationSettings = `"wght" ${weight}`;
-    h1.style.letterSpacing = `${spacing}em`;
+  // Calculate letter-spacing based on vertical mouse position (up = looser, down = tighter)
+  const spacing = (0.3 - (clientY / innerHeight) * 0.35).toFixed(3);
+
+  h1.style.fontVariationSettings = `"wght" ${weight}`;
+  h1.style.letterSpacing = `${spacing}em`;
 });
 
 initThree();

@@ -127,6 +127,65 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+/* --- TYPEWRITER ANIMATION FOR LOGO --- */
+
+const logoVariations = [
+  "É Collective",
+  "É Studios",
+  "É Space",
+  "É Sounds",
+  "RÉsearch",
+  "TarmÉ",
+];
+
+let currentVariationIndex = 0;
+let currentText = "";
+let isDeleting = false;
+let charIndex = 0;
+
+function typeWriter() {
+  const logoElement = document.getElementById("logo-text");
+  if (!logoElement) return;
+
+  const targetText = logoVariations[currentVariationIndex];
+
+  if (!isDeleting) {
+    // Typing
+    currentText = targetText.substring(0, charIndex + 1);
+    charIndex++;
+
+    if (charIndex === targetText.length) {
+      // Finished typing, wait before deleting
+      setTimeout(() => {
+        isDeleting = true;
+        typeWriter();
+      }, 2000); // Wait 2 seconds before starting to delete
+      logoElement.textContent = currentText;
+      return;
+    }
+  } else {
+    // Deleting
+    currentText = targetText.substring(0, charIndex - 1);
+    charIndex--;
+
+    if (charIndex === 0) {
+      // Finished deleting, move to next variation
+      isDeleting = false;
+      currentVariationIndex =
+        (currentVariationIndex + 1) % logoVariations.length;
+      setTimeout(typeWriter, 500); // Wait 0.5s before typing next word
+      logoElement.textContent = currentText;
+      return;
+    }
+  }
+
+  logoElement.textContent = currentText;
+
+  // Typing speed: 40ms, Deleting speed: 30ms
+  const speed = isDeleting ? 30 : 40;
+  setTimeout(typeWriter, speed);
+}
+
 /* --- MOBILE MENU NAVIGATION LOGIC --- */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -137,6 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
     navLinks.classList.toggle("mobile");
     navLinks.classList.toggle("active");
   });
+
+  // Start typewriter animation after 1 second
+  setTimeout(typeWriter, 1000);
 });
 
 /* --- VARIABLE FONT ANIMATION --- */

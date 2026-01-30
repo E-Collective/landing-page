@@ -31,7 +31,7 @@ jobs:
     environment:
       name: github-pages
       # DONT forget to ADD THE LINKKKKKKK tatev!
-      url: ${{ steps: deployment.outputs.page_url }}
+      #url: ${{ steps: deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

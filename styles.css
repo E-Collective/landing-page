@@ -5,6 +5,19 @@
   --bg-deep: #05111a;
   --glass-bg: rgba(255, 255, 255, 0.03);
   --text-main: #e0e6ed;
+
+  /* new colors */
+  --ash-brown: #685044;
+  --palm-leaf: #809848;
+  --muted-olive: #b0ca87;
+  --twitter-blue: #3678c6;
+  --yale-blue: #204577;
+  --prussian-blue: #0a1128;
+  --space-indigo: #20273c;
+  --charcoal-blue: #343b4e;
+  --blue-slate: #464d5e;
+  --slate-gray: #575d6d;
+  /*     #20273c, #747446, , #98b168, , #73a1a7  */
 }
 
 * {

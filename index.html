@@ -1,343 +1,542 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>É Collective</title>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"
+      crossorigin="anonymous"
+    ></script>
 
     <style>
-        /* --- 1. GLOBAL STYLES & TYPOGRAPHY --- */
-        :root {
-            --accent-cyan: #78ffd6;
-            --accent-green: #a8ff78;
-            --bg-deep: #05111a;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --text-main: #e0e6ed;
+      /* --- 1. GLOBAL STYLES & TYPOGRAPHY --- */
+      :root {
+        --accent-cyan: #78ffd6;
+        --accent-green: #a8ff78;
+        --bg-deep: #05111a;
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --text-main: #e0e6ed;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--bg-deep);
+        color: var(--text-main);
+        font-family: "Inter", sans-serif;
+        line-height: 1.7;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+
+      /* --- 2. INTERACTIVE BACKGROUND CANVAS --- */
+      #mesh-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        display: block;
+      }
+
+      #webcam {
+        display: none;
+      }
+
+      /* --- 3. NAVIGATION --- */
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 5%;
+        background: rgba(5, 17, 26, 0.8);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-weight: 600;
+        font-size: 1.6rem;
+        background: linear-gradient(
+          90deg,
+          var(--accent-green),
+          var(--accent-cyan)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nav-links a {
+        color: #cbd5e1;
+        text-decoration: none;
+        margin-left: 25px;
+        font-size: 0.8rem;
+        transition: 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .nav-links a:hover {
+        color: var(--accent-cyan);
+      }
+
+      .donate-btn {
+        background: linear-gradient(45deg, #a8ff78, #78ffd6);
+        padding: 10px 22px !important;
+        border-radius: 4px;
+        color: #05111a !important;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(120, 255, 214, 0.3);
+      }
+
+      /* --- 4. HERO SECTION --- */
+      #hero {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: transparent;
+      }
+
+      #hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(3rem, 10vw, 6rem);
+        margin-bottom: 10px;
+        color: #fff;
+        text-shadow: 0 0 40px rgba(120, 255, 214, 0.2);
+      }
+      #hero p {
+        font-size: 1rem;
+        color: var(--accent-cyan);
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        opacity: 0.8;
+      }
+
+      /* --- 5. CONTENT SECTIONS (Part 1 Integration) --- */
+      section {
+        padding: 120px 10%;
+        position: relative;
+        z-index: 1;
+        background: rgba(5, 17, 26, 0.6);
+        backdrop-filter: blur(4px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .about-intro {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto 80px auto;
+      }
+
+      .about-intro h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-green),
+          var(--accent-cyan)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .drop-cap {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: var(--accent-cyan);
+      }
+
+      /* Grid & Cards */
+      .content-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+      }
+
+      .card {
+        background: var(--glass-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 40px 30px;
+        border-radius: 12px;
+        transition: all 0.4s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--accent-cyan);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+      }
+
+      .card h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        color: #fff;
+        border-bottom: 1px solid rgba(120, 255, 214, 0.2);
+        padding-bottom: 10px;
+      }
+
+      /* Lists */
+      .vision-list {
+        list-style: none;
+      }
+      .vision-list li {
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 15px;
+        color: #cbd5e1;
+        font-size: 0.95rem;
+      }
+      .vision-list li::before {
+        content: "✦";
+        position: absolute;
+        left: 0;
+        color: var(--accent-cyan);
+      }
+
+      #loading {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        color: var(--accent-cyan);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        animation: pulse 1.5s infinite;
+        z-index: 2000;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.4;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body { 
-            background-color: var(--bg-deep); 
-            color: var(--text-main); 
-            font-family: 'Inter', sans-serif;
-            line-height: 1.7;
-            overflow-x: hidden; 
-            scroll-behavior: smooth; 
+        50% {
+          opacity: 1;
         }
+      }
 
-        /* --- 2. INTERACTIVE BACKGROUND CANVAS --- */
-        #mesh-canvas { 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100vw; height: 100vh; 
-            z-index: -1; 
-            display: block;
+      footer {
+        padding: 60px 10%;
+        background: #030a10;
+        text-align: center;
+        color: #4b5563;
+        font-size: 0.8rem;
+      }
+
+      @media (max-width: 768px) {
+        #hero h1 {
+          font-size: 3rem;
         }
-
-        #webcam { display: none; }
-
-        /* --- 3. NAVIGATION --- */
-        nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 5%; background: rgba(5, 17, 26, 0.8);
-            backdrop-filter: blur(10px);
-            position: fixed; width: 100%; z-index: 1000; 
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .logo { 
-            font-family: 'Playfair Display', serif;
-            font-weight: 600; font-size: 1.6rem; 
-            background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-links a {
-            color: #cbd5e1; text-decoration: none; margin-left: 25px;
-            font-size: 0.8rem; transition: 0.3s; text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .nav-links a:hover { color: var(--accent-cyan); }
-
-        .donate-btn {
-            background: linear-gradient(45deg, #a8ff78, #78ffd6);
-            padding: 10px 22px !important;
-            border-radius: 4px; color: #05111a !important; font-weight: bold;
-            box-shadow: 0 4px 15px rgba(120, 255, 214, 0.3);
-        }
-
-        /* --- 4. HERO SECTION --- */
-        #hero {
-            height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            background: transparent;
-        }
-
-        #hero h1 { 
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 10vw, 6rem); 
-            margin-bottom: 10px; 
-            color: #fff;
-            text-shadow: 0 0 40px rgba(120, 255, 214, 0.2);
-        }
-        #hero p { font-size: 1rem; color: var(--accent-cyan); letter-spacing: 5px; text-transform: uppercase; opacity: 0.8; }
-
-        /* --- 5. CONTENT SECTIONS (Part 1 Integration) --- */
-        section { 
-            padding: 120px 10%; 
-            position: relative;
-            z-index: 1;
-            background: rgba(5, 17, 26, 0.6); 
-            backdrop-filter: blur(4px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .about-intro {
-            text-align: center; max-width: 800px; margin: 0 auto 80px auto;
-        }
-
         .about-intro h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem; margin-bottom: 20px;
-            background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          font-size: 2.5rem;
         }
-
-        .drop-cap { font-size: 1.5em; font-weight: bold; color: var(--accent-cyan); }
-
-        /* Grid & Cards */
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+        nav {
+          padding: 15px 5%;
         }
-
-        .card {
-            background: var(--glass-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px 30px; border-radius: 12px;
-            transition: all 0.4s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-        }
-
-        .card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem; margin-bottom: 20px; color: #fff;
-            border-bottom: 1px solid rgba(120, 255, 214, 0.2);
-            padding-bottom: 10px;
-        }
-
-        /* Lists */
-        .vision-list { list-style: none; }
-        .vision-list li {
-            position: relative; padding-left: 25px; margin-bottom: 15px;
-            color: #cbd5e1; font-size: 0.95rem;
-        }
-        .vision-list li::before {
-            content: "✦"; position: absolute; left: 0; color: var(--accent-cyan);
-        }
-
-        #loading {
-            position: fixed; bottom: 20px; right: 20px;
-            color: var(--accent-cyan); font-size: 0.7rem; text-transform: uppercase;
-            letter-spacing: 2px; animation: pulse 1.5s infinite; z-index: 2000;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-
-        footer { padding: 60px 10%; background: #030a10; text-align: center; color: #4b5563; font-size: 0.8rem; }
-
-        @media (max-width: 768px) {
-            #hero h1 { font-size: 3rem; }
-            .about-intro h2 { font-size: 2.5rem; }
-            nav { padding: 15px 5%; }
-            .nav-links { display: none; } /* Simplified for demo */
-        }
+        .nav-links {
+          display: none;
+        } /* Simplified for demo */
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="loading">Initialising Neural Fabric...</div>
     <canvas id="mesh-canvas"></canvas>
     <video id="webcam" autoplay playsinline></video>
 
     <nav>
-        <div class="logo">É Collective</div>
-        <div class="nav-links">
-            <a href="#about">About</a>
-            <a href="#projects">Projects</a>
-            <a href="#shop">Shop</a>
-            <a href="#donate" class="donate-btn">Donate</a>
-        </div>
+      <div class="logo">É Collective</div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#shop">Shop</a>
+        <a href="#donate" class="donate-btn">Donate</a>
+      </div>
     </nav>
 
     <div id="hero">
-        <h1>é collective</h1>
+      <h1>é collective</h1>
     </div>
 
     <section id="about">
-        <div class="about-intro">
-            <h2>About Our Mission</h2>
-            <p style="font-size: 1.2rem; color: #b0bec5;">
-                <span class="drop-cap">É</span> is an interdisciplinary collective exploring the cooperation between nature and science through indigenous and innovative research.
-            </p>
+      <div class="about-intro">
+        <h2>About Our Mission</h2>
+        <p style="font-size: 1.2rem; color: #b0bec5">
+          <span class="drop-cap">É</span> is an interdisciplinary collective
+          exploring the cooperation between nature and science through
+          indigenous and innovative research.
+        </p>
+      </div>
+
+      <div class="content-grid">
+        <div class="card">
+          <h3>Our Values</h3>
+          <p>
+            Authenticity & Honesty, Aspiration & Determination, Receptiveness &
+            Transparency, Care & Empathy, and most importantly, Sustainability &
+            Ecological awareness guide our actions and strengthen both our
+            personal connections and our responsibility to the world around us.
+          </p>
         </div>
 
-        <div class="content-grid">
-            <div class="card">
-                <h3>Our Values</h3>
-                <p>Authenticity & Honesty, Aspiration & Determination, Receptiveness & Transparency, Care & Empathy, and most importantly, Sustainability & Ecological awareness guide our actions and strengthen both our personal connections and our responsibility to the world around us.</p>
-            </div>
-
-            <div class="card">
-                <h3>Our Mission</h3>
-                <p>Our mission is to bring together artists, innovators, and community members, anybody who believes in unconventional solutions, mutual support, and cultural resilience. We work to confront the challenges of pollution, consumerism, and the pressures of modern systems by creating a collaborative space where people can unite, take action, and shape a more sustainable and culturally empowered future.</p>
-            </div>
-
-            <div class="card">
-                <h3>Our Vision</h3>
-                <!-- <ul class="vision-list"> -->
-                    <p>Our vision is to make Sustainability & Awareness genuinely fashionable & essential.
-We were born into an industrial culture where simply participating often feels inherently harmful to the environment, which raises important questions: Does it have to be this way? Is ethical consumerism even possible? How do we move beyond greenwashing? </p>
-                    <p>As a collective, we explore unconventional approaches, often discovering they’re far more natural and intuitive than expected. We aim to question everything, from the way we live and breathe to the systems we’re told are necessary. And we want to inspire others to do the same, approaching this exploration with respect, curiosity, and a sense of radical love for ourselves, each other, and the planet.</p>
-                <!-- </ul> -->
-            </div>
-            <div class="card">
-                <h3>Our Goals</h3>
-                <ul class="vision-list">
-                    <li>Create shared spaces and tools for creative community collaboration.</li>
-                    <li>Draw inspiration from indigenous knowledge and slow living.</li>
-                    <li>Support decentralised and interdisciplinary forms of "disart".</li>
-                </ul>
-            </div>
+        <div class="card">
+          <h3>Our Mission</h3>
+          <p>
+            Our mission is to bring together artists, innovators, and community
+            members, anybody who believes in unconventional solutions, mutual
+            support, and cultural resilience. We work to confront the challenges
+            of pollution, consumerism, and the pressures of modern systems by
+            creating a collaborative space where people can unite, take action,
+            and shape a more sustainable and culturally empowered future.
+          </p>
         </div>
+
+        <div class="card">
+          <h3>Our Vision</h3>
+          <!-- <ul class="vision-list"> -->
+          <p>
+            Our vision is to make Sustainability & Awareness genuinely
+            fashionable & essential. We were born into an industrial culture
+            where simply participating often feels inherently harmful to the
+            environment, which raises important questions: Does it have to be
+            this way? Is ethical consumerism even possible? How do we move
+            beyond greenwashing?
+          </p>
+          <p>
+            As a collective, we explore unconventional approaches, often
+            discovering they’re far more natural and intuitive than expected. We
+            aim to question everything, from the way we live and breathe to the
+            systems we’re told are necessary. And we want to inspire others to
+            do the same, approaching this exploration with respect, curiosity,
+            and a sense of radical love for ourselves, each other, and the
+            planet.
+          </p>
+          <!-- </ul> -->
+        </div>
+        <div class="card">
+          <h3>Our Goals</h3>
+          <ul class="vision-list">
+            <li>
+              Create shared spaces and tools for creative community
+              collaboration.
+            </li>
+            <li>Draw inspiration from indigenous knowledge and slow living.</li>
+            <li>
+              Support decentralised and interdisciplinary forms of "disart".
+            </li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section id="projects">
-        <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 40px;">Current Projects</h2>
-        <div class="content-grid">
-            <div class="card">
-                <h3>Teladrutyun</h3>
-                <p>"É collective" was founded by Mila Harutyunyan and Margarita Astvacatryan, two diverse visionary beings committed to challenging and pushing the boundaries of what is traditionally perceived as art. Having completed several interactive performances that blend experimental visuals and soundscapes, they are now expanding their horizons as a collective. With a strong sense of mission, "É collective" unites other bold and talented artists and friends from various other disciplines, creating a dynamic platform for experimentation and collaboration. Their work is driven by the desire to challenge conventions, explore new forms of artistic expression, systems and lifestyles. </p>
-                <iframe 
-            src="https://youtu.be/Fg7Tiq3CmxI?si=Sxr6h0Jsco8gwuLh" 
-            title="YouTube video player" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowfullscreen>
-        </iframe>
-            </div>
+      <h2
+        style="
+          font-family: &quot;Playfair Display&quot;, serif;
+          font-size: 2.5rem;
+          margin-bottom: 40px;
+        "
+      >
+        Current Projects
+      </h2>
+      <div class="content-grid">
+        <div class="card">
+          <h3>Teladrutyun</h3>
+          <p>
+            "É collective" was founded by Mila Harutyunyan and Margarita
+            Astvacatryan, two diverse visionary beings committed to challenging
+            and pushing the boundaries of what is traditionally perceived as
+            art. Having completed several interactive performances that blend
+            experimental visuals and soundscapes, they are now expanding their
+            horizons as a collective. With a strong sense of mission, "É
+            collective" unites other bold and talented artists and friends from
+            various other disciplines, creating a dynamic platform for
+            experimentation and collaboration. Their work is driven by the
+            desire to challenge conventions, explore new forms of artistic
+            expression, systems and lifestyles.
+          </p>
+          <iframe
+            src="https://youtu.be/Fg7Tiq3CmxI?si=Sxr6h0Jsco8gwuLh"
+            title="YouTube video player"
+            frameborder="0"
+            allow="
+              accelerometer;
+              autoplay;
+              clipboard-write;
+              encrypted-media;
+              gyroscope;
+              picture-in-picture;
+              web-share;
+            "
+            allowfullscreen
+          >
+          </iframe>
         </div>
+      </div>
     </section>
 
     <footer>© 2026 E collective. Built with Three.js & MediaPipe.</footer>
 
     <script>
-        /* --- THREE.JS & MEDIAPIPE LOGIC --- */
-        const CONFIG = {
-            segmentsX: 60, segmentsY: 40,
-            color: 0x78ffd6, // Changed to match the Green/Cyan theme
-            cameraZ: 30,
-            brushRadius: 7.0,
-            brushStrength: 1.2,
-            decay: 0.98,
-            waveSpeed: 1.0,
-            waveHeight: 0.5
-        };
+      /* --- THREE.JS & MEDIAPIPE LOGIC --- */
+      const CONFIG = {
+        segmentsX: 60,
+        segmentsY: 40,
+        color: 0x78ffd6, // Changed to match the Green/Cyan theme
+        cameraZ: 30,
+        brushRadius: 7.0,
+        brushStrength: 1.2,
+        decay: 0.98,
+        waveSpeed: 1.0,
+        waveHeight: 0.5,
+      };
 
-        let scene, camera, renderer, mesh, elevationData = [];
-        let worldWidth, worldHeight, fingerPos = { x: 0, y: 0, active: false };
-        const canvas = document.getElementById('mesh-canvas');
-        const videoElement = document.getElementById('webcam');
+      let scene,
+        camera,
+        renderer,
+        mesh,
+        elevationData = [];
+      let worldWidth,
+        worldHeight,
+        fingerPos = { x: 0, y: 0, active: false };
+      const canvas = document.getElementById("mesh-canvas");
+      const videoElement = document.getElementById("webcam");
 
-        function initThree() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = CONFIG.cameraZ;
+      function initThree() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(
+          45,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000,
+        );
+        camera.position.z = CONFIG.cameraZ;
 
-            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
+        renderer = new THREE.WebGLRenderer({
+          canvas,
+          antialias: true,
+          alpha: true,
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
 
-            const vFOV = (camera.fov * Math.PI) / 180;
-            const h = 2 * Math.tan(vFOV / 2) * CONFIG.cameraZ;
-            const w = h * camera.aspect;
-            worldWidth = w * 1.5; worldHeight = h * 1.5;
+        const vFOV = (camera.fov * Math.PI) / 180;
+        const h = 2 * Math.tan(vFOV / 2) * CONFIG.cameraZ;
+        const w = h * camera.aspect;
+        worldWidth = w * 1.5;
+        worldHeight = h * 1.5;
 
-            const geometry = new THREE.PlaneGeometry(worldWidth, worldHeight, CONFIG.segmentsX, CONFIG.segmentsY);
-            elevationData = new Float32Array(geometry.attributes.position.count).fill(0);
+        const geometry = new THREE.PlaneGeometry(
+          worldWidth,
+          worldHeight,
+          CONFIG.segmentsX,
+          CONFIG.segmentsY,
+        );
+        elevationData = new Float32Array(
+          geometry.attributes.position.count,
+        ).fill(0);
 
-            const material = new THREE.MeshBasicMaterial({
-                color: CONFIG.color,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.15
-            });
-
-            mesh = new THREE.Mesh(geometry, material);
-            scene.add(mesh);
-        }
-
-        function onResults(results) {
-            document.getElementById('loading').style.display = results.multiHandLandmarks ? 'none' : 'block';
-            if (results.multiHandLandmarks?.length > 0) {
-                const tip = results.multiHandLandmarks[0][8];
-                fingerPos.x = (1 - tip.x) * worldWidth - (worldWidth / 2);
-                fingerPos.y = (1 - tip.y) * worldHeight - (worldHeight / 2);
-                fingerPos.active = true;
-            } else { fingerPos.active = false; }
-        }
-
-        function initMediaPipe() {
-            const hands = new Hands({locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});
-            hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5 });
-            hands.onResults(onResults);
-            new Camera(videoElement, { onFrame: async () => await hands.send({image: videoElement}), width: 640, height: 480 }).start();
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            const time = performance.now() / 1000;
-            const pos = mesh.geometry.attributes.position.array;
-
-            for (let i = 0; i < mesh.geometry.attributes.position.count; i++) {
-                const x = pos[i * 3], y = pos[i * 3 + 1];
-                const wave = Math.sin(x * 0.3 + time) * Math.cos(y * 0.3 + time) * CONFIG.waveHeight;
-
-                if (fingerPos.active) {
-                    const dist = Math.sqrt((x - fingerPos.x)**2 + (y - fingerPos.y)**2);
-                    if (dist < CONFIG.brushRadius) {
-                        elevationData[i] += (1 - dist / CONFIG.brushRadius) * CONFIG.brushStrength;
-                    }
-                }
-                elevationData[i] *= CONFIG.decay;
-                pos[i * 3 + 2] = wave + elevationData[i];
-            }
-            mesh.geometry.attributes.position.needsUpdate = true;
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        const material = new THREE.MeshBasicMaterial({
+          color: CONFIG.color,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.15,
         });
 
-        initThree();
-        initMediaPipe();
-        animate();
+        mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+      }
+
+      function onResults(results) {
+        document.getElementById("loading").style.display =
+          results.multiHandLandmarks ? "none" : "block";
+        if (results.multiHandLandmarks?.length > 0) {
+          const tip = results.multiHandLandmarks[0][8];
+          fingerPos.x = (1 - tip.x) * worldWidth - worldWidth / 2;
+          fingerPos.y = (1 - tip.y) * worldHeight - worldHeight / 2;
+          fingerPos.active = true;
+        } else {
+          fingerPos.active = false;
+        }
+      }
+
+      function initMediaPipe() {
+        const hands = new Hands({
+          locateFile: (f) =>
+            `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`,
+        });
+        hands.setOptions({
+          maxNumHands: 1,
+          modelComplexity: 1,
+          minDetectionConfidence: 0.5,
+        });
+        hands.onResults(onResults);
+        new Camera(videoElement, {
+          onFrame: async () => await hands.send({ image: videoElement }),
+          width: 640,
+          height: 480,
+        }).start();
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const time = performance.now() / 1000;
+        const pos = mesh.geometry.attributes.position.array;
+
+        for (let i = 0; i < mesh.geometry.attributes.position.count; i++) {
+          const x = pos[i * 3],
+            y = pos[i * 3 + 1];
+          const wave =
+            Math.sin(x * 0.3 + time) *
+            Math.cos(y * 0.3 + time) *
+            CONFIG.waveHeight;
+
+          if (fingerPos.active) {
+            const dist = Math.sqrt(
+              (x - fingerPos.x) ** 2 + (y - fingerPos.y) ** 2,
+            );
+            if (dist < CONFIG.brushRadius) {
+              elevationData[i] +=
+                (1 - dist / CONFIG.brushRadius) * CONFIG.brushStrength;
+            }
+          }
+          elevationData[i] *= CONFIG.decay;
+          pos[i * 3 + 2] = wave + elevationData[i];
+        }
+        mesh.geometry.attributes.position.needsUpdate = true;
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      initThree();
+      initMediaPipe();
+      animate();
     </script>
-</body>
+  </body>
 </html>

@@ -2,7 +2,7 @@
 const CONFIG = {
   segmentsX: 60,
   segmentsY: 40,
-  color: 0x78ffd6, // Changed to match the Green/Cyan theme
+  color: 0xe0e6ed, // Changed to white to match the theme
   cameraZ: 30,
   brushRadius: 7.0,
   brushStrength: 1.2,

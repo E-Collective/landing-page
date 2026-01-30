@@ -1,12 +1,13 @@
 /* --- 1. GLOBAL STYLES & TYPOGRAPHY --- */
 :root {
-  --accent-cyan: #78ffd6;
-  --accent-green: #a8ff78;
+  /* main colors */
+  --white: #ffffff;
+  --accent-white: #e0e6ed;
   --bg-deep: #05111a;
   --glass-bg: rgba(255, 255, 255, 0.03);
-  --text-main: #e0e6ed;
+  --dark-glass: rgba(5, 17, 26, 0.8);
 
-  /* new colors */
+  /* color pallete */
   --ash-brown: #685044;
   --dusty-olive: #747446;
   --palm-leaf: #809848;
@@ -29,8 +30,8 @@
 }
 
 body {
-  background-color: var(--bg-deep);
-  color: var(--text-main);
+  background-color: var(--charcoal-blue);
+  color: var(--accent-white);
   font-family: "Inter", sans-serif;
   line-height: 1.7;
   overflow-x: hidden;
@@ -58,7 +59,7 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 20px 5%;
-  background: rgba(5, 17, 26, 0.8);
+  /* background: var(--dark-glass); */
   backdrop-filter: blur(10px);
   position: fixed;
   width: 100%;
@@ -70,9 +71,14 @@ nav {
   font-family: "Playfair Display", serif;
   font-weight: 600;
   font-size: 1.6rem;
-  background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+  background: var(--accent-white);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center; /* Vertically centers the text */
 }
 
 .nav-links a {
@@ -86,16 +92,17 @@ nav {
 }
 
 .nav-links a:hover {
-  color: var(--accent-cyan);
+  color: var(--space-indigo);
 }
 
 .donate-btn {
-  background: linear-gradient(45deg, #a8ff78, #78ffd6);
-  padding: 10px 22px !important;
-  border-radius: 4px;
-  color: #05111a !important;
+  /* background: linear-gradient(45deg, --charcoal-blue, --space-indigo); */
+  background: var(--space-indigo);
+  color: #fff !important;
+  border-radius: 100px;
+  padding: 10px 22px;
   font-weight: bold;
-  box-shadow: 0 4px 15px rgba(120, 255, 214, 0.3);
+  box-shadow: 0 4px 15px var(--dark-glass);
 }
 
 /* --- 4. HERO SECTION --- */
@@ -114,11 +121,11 @@ nav {
   font-size: clamp(3rem, 10vw, 6rem);
   margin-bottom: 10px;
   color: #fff;
-  text-shadow: 0 0 40px rgba(120, 255, 214, 0.2);
+  text-shadow: 0 0 40px var(--dark-glass);
 }
 #hero p {
   font-size: 1rem;
-  color: var(--accent-cyan);
+  color: var(--accent-white);
   letter-spacing: 5px;
   text-transform: uppercase;
   opacity: 0.8;
@@ -129,7 +136,7 @@ section {
   padding: 120px 5%; /* Reduced padding to prevent content overflow */
   position: relative;
   z-index: 1;
-  background: rgba(5, 17, 26, 0.6);
+  /* background: var(--dark-glass); */
   backdrop-filter: blur(4px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden; /* Prevent content from overflowing */
@@ -145,7 +152,7 @@ section {
   font-family: "Playfair Display", serif;
   font-size: 3.5rem;
   margin-bottom: 20px;
-  background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+  background: var(--accent-white);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -153,7 +160,7 @@ section {
 .drop-cap {
   font-size: 1.5em;
   font-weight: bold;
-  color: var(--accent-cyan);
+  color: var(--accent-white);
 }
 
 /* Grid & Cards */
@@ -177,7 +184,7 @@ section {
 .card:hover {
   transform: translateY(-10px);
   background: rgba(255, 255, 255, 0.05);
-  border-color: var(--accent-cyan);
+  border-color: var(--white);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
 }
 
@@ -186,7 +193,7 @@ section {
   font-size: 1.8rem;
   margin-bottom: 20px;
   color: #fff;
-  border-bottom: 1px solid rgba(120, 255, 214, 0.2);
+  border-bottom: 1px solid var(--accent-white);
   padding-bottom: 10px;
 }
 
@@ -205,14 +212,14 @@ section {
   content: "✦";
   position: absolute;
   left: 0;
-  color: var(--accent-cyan);
+  color: var(--accent-white);
 }
 
 #loading {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  color: var(--accent-cyan);
+  color: var(--accent-white);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -231,9 +238,9 @@ section {
 
 footer {
   padding: 60px 10%;
-  background: #030a10;
+  /* background: var(--dark-glass); */
   text-align: center;
-  color: #4b5563;
+  color: #e0e6ed;
   font-size: 0.8rem;
 }
 
@@ -247,7 +254,7 @@ footer {
 .hamburger div {
   width: 25px;
   height: 3px;
-  background-color: var(--text-main);
+  background-color: var(--accent-white);
   margin: 4px 0;
   transition: 0.4s;
 }
@@ -255,6 +262,7 @@ footer {
 .nav-links {
   display: flex;
   flex-direction: row;
+  align-items: center; /* Vertically centers the text */
 }
 
 .nav-links.mobile {

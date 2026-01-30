@@ -40,6 +40,73 @@ body {
   line-height: 1.7;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  position: relative;
+}
+
+/* Grain texture overlay - CSS only approach */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px
+    ),
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(32, 39, 60, 0.8) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(32, 39, 60, 0.8) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(32, 39, 60, 0.8) 0%,
+      transparent 50%
+    );
+  background-size:
+    4px 4px,
+    4px 4px,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+  filter: contrast(200%) brightness(90%);
+}
+
+/* Space indigo tint layer */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--space-indigo);
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: multiply;
 }
 
 /* --- 2. INTERACTIVE BACKGROUND CANVAS --- */

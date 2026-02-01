@@ -1,0 +1,487 @@
+/* --- FONT IMPORTS --- */
+@import url("https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap");
+
+/* --- 1. GLOBAL STYLES & TYPOGRAPHY --- */
+:root {
+  /* main colors */
+  --white: #ffffff;
+  --accent-white: #e0e6ed;
+  --bg-deep: #05111a;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --dark-glass: rgba(5, 17, 26, 0.8);
+
+  /* color pallete */
+  --ash-brown: #685044;
+  --dusty-olive: #747446;
+  --palm-leaf: #809848;
+  --olive-green: #98b168;
+  --muted-olive: #b0ca87;
+  --pacific-blue: #73a1a7;
+  --twitter-blue: #3678c6;
+  --yale-blue: #204577;
+  --prussian-blue: #0a1128;
+  --space-indigo: #20273c;
+  --charcoal-blue: #343b4e;
+  --blue-slate: #464d5e;
+  --slate-gray: #575d6d;
+
+  /* global font */
+  --global-font: "Atkinson Hyperlegible", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+body {
+  background-color: var(--charcoal-blue);
+  color: var(--accent-white);
+  font-family: var(--global-font);
+  line-height: 1.7;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+/* Grain texture overlay - CSS only approach */
+/* body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px
+    ),
+    radial-gradient(circle at 10% 20%, rgba(32, 39, 60, 0.8) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(32, 39, 60, 0.8) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(32, 39, 60, 0.8) 0%, transparent 50%);
+  background-size: 4px 4px, 4px 4px, 100% 100%, 100% 100%, 100% 100%;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+  filter: contrast(200%) brightness(90%);
+}
+
+/* Space indigo tint layer 
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--space-indigo);
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: multiply;
+} 
+
+/* --- 2. INTERACTIVE BACKGROUND CANVAS --- */
+#mesh-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  display: block;
+}
+
+#webcam {
+  display: none;
+}
+
+/* --- 3. NAVIGATION --- */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 5%;
+  /* background: var(--dark-glass); */
+  backdrop-filter: blur(10px);
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 1.6rem;
+  background: var(--accent-white);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.logo .cursor {
+  display: inline-block;
+  margin-left: 2px;
+  background: var(--accent-white);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center; /* Vertically centers the text */
+}
+
+.nav-links a {
+  color: var(--accent-white);
+  text-decoration: none;
+  margin-left: 25px;
+  font-size: 0.8rem;
+  transition: 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav-links a:hover {
+  color: var(--space-indigo);
+}
+
+.donate-btn {
+  /* background: linear-gradient(45deg, --charcoal-blue, --space-indigo); */
+  background: var(--space-indigo);
+  color: var(--white);
+  border-radius: 100px;
+  padding: 10px 22px;
+  font-weight: bold;
+  box-shadow: 0 4px 15px var(--dark-glass);
+  transition: background 0.3s ease;
+}
+
+.donate-btn:hover {
+  background: var(--olive-green);
+}
+
+/* --- 4. HERO SECTION --- */
+#hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: transparent;
+}
+
+#hero h1 {
+  font-family: "Inter", var(--global-font);
+  font-size: clamp(3rem, 10vw, 6rem);
+  margin-bottom: 10px;
+  color: #fff;
+  text-shadow: 0 0 40px var(--dark-glass);
+  transition:
+    font-variation-settings 0.1s ease-out,
+    letter-spacing 0.1s ease-out;
+  font-variation-settings: "wght" 500;
+  letter-spacing: 0em;
+}
+#hero p {
+  font-size: 1rem;
+  color: var(--accent-white);
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* --- 5. CONTENT SECTIONS (Part 1 Integration) --- */
+section {
+  padding: 120px 5%; /* Reduced padding to prevent content overflow */
+  position: relative;
+  z-index: 1;
+  /* background: var(--dark-glass); */
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+.about-intro {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 80px auto;
+}
+
+.about-intro h2 {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  background: var(--accent-white);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#about .about-intro p {
+  font-size: 1.2rem;
+  color: var(--accent-white);
+}
+
+/* #philosophy {
+  font-size: 1.2rem;
+  color: var(--space-indigo);
+  text-align: left;
+  margin: 0 auto;
+} */
+
+.drop-cap {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--accent-white);
+}
+
+/* Could be a cool animation needs a fix though
+
+.drop-cap {
+  display: inline-block;
+  animation: text-animation 5s infinite alternate;
+}
+
+@keyframes text-animation {
+  0% {
+    content: "É";
+  }
+  8.33% {
+    content: "ε";
+  }
+  16.66% {
+    content: "È";
+  }
+  25% {
+    content: "ɇ";
+  }
+  33.33% {
+    content: "Է";
+  }
+  41.66% {
+    content: "é";
+  }
+  50% {
+    content: "è";
+  }
+  58.33% {
+    content: "Æ";
+  }
+  66.66% {
+    content: "æ";
+  }
+  75% {
+    content: "Ɇ";
+  }
+  83.33% {
+    content: "ϵ";
+  }
+  100% {
+    content: "ϵ";
+  }
+} */
+
+/* Grid & Cards */
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Default to 4 columns */
+  gap: 30px;
+}
+
+.card {
+  background: var(--glass-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 40px 30px;
+  border-radius: 12px;
+  transition: all 0.4s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--white);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+.card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #fff;
+  border-bottom: 1px solid var(--accent-white);
+  padding-bottom: 10px;
+}
+
+#projects h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+/* Lists */
+.vision-list {
+  list-style: none;
+}
+.vision-list li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 15px;
+}
+.vision-list li::before {
+  /* content: "✦"; */
+  content: "e";
+  position: absolute;
+  left: 0;
+  font-family: "Bubblegum Sans", "Comic Sans MS", "Opendyslexic", cursive;
+  font-weight: 400;
+  font-size: 1.4em;
+  color: var(--accent-white);
+  transform: rotate(-5deg);
+}
+
+#loading {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: var(--accent-white);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: pulse 1.5s infinite;
+  z-index: 2000;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+footer {
+  padding: 60px 10%;
+  /* background: var(--dark-glass); */
+  text-align: center;
+  color: #e0e6ed;
+  font-size: 0.8rem;
+}
+
+/* --- Hamburger Menu --- */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.hamburger div {
+  width: 25px;
+  height: 3px;
+  background-color: var(--accent-white);
+  margin: 4px 0;
+  transition: 0.4s;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Vertically centers the text */
+}
+
+.nav-links.mobile {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 5%;
+  background: var(--glass-bg);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-links.mobile a {
+  margin: 10px 0;
+}
+
+.nav-links.mobile.active {
+  display: flex;
+}
+
+@media (max-width: 1024px) {
+  /* Adjusted grid layout for the About section */
+  .content-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2x2 layout on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  #hero h1 {
+    font-size: 3rem;
+  }
+  .about-intro h2 {
+    font-size: 2.5rem;
+  }
+  nav {
+    padding: 15px 5%;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+  } /* Simplified for demo */
+  section {
+    padding: 80px 5%; /* Adjust padding for tablets */
+  }
+
+  /* Adjusted grid layout for the About section */
+  .content-grid {
+    grid-template-columns: repeat(
+      2,
+      1fr
+    ); /* Forces 2x2 layout on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: 60px 5%; /* Adjust padding for mobile */
+  }
+
+  /* Adjusted grid layout for the About section */
+  .content-grid {
+    grid-template-columns: 1fr; /* Stacks all items vertically on very small screens */
+  }
+}

@@ -392,8 +392,17 @@ footer {
   padding: 60px 10%;
   /* background: var(--dark-glass); */
   text-align: center;
-  color: #e0e6ed;
+  color: var(--accent-white);
   font-size: 0.8rem;
+}
+
+footer a {
+  color: var(--accent-white);
+  transition: opacity 0.3s;
+}
+
+footer a:hover {
+  opacity: 0.7;
 }
 
 /* --- Hamburger Menu --- */

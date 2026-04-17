@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy - É Collective</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .legal-page {
+        max-width: 800px;
+        margin: 120px auto 60px;
+        padding: 60px;
+        background: var(--glass-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        position: relative;
+        z-index: 1;
+        flex: 1;
+      }
+
+      .legal-page h1 {
+        font-size: 2.5rem;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        background: var(--accent-white);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .last-updated {
+        color: var(--pacific-blue);
+        font-size: 0.85rem;
+        margin-bottom: 3rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .legal-page section {
+        padding: 0;
+        margin-bottom: 2.5rem;
+        border: none;
+        background: transparent;
+        backdrop-filter: none;
+      }
+
+      .legal-page h2 {
+        font-size: 1.1rem;
+        color: var(--muted-olive);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .legal-page h3 {
+        font-size: 1rem;
+        color: var(--accent-white);
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+      }
+
+      .legal-page p {
+        color: var(--accent-white);
+        line-height: 1.8;
+      }
+
+      .legal-page ul {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 0.75rem;
+      }
+
+      .legal-page ul li {
+        color: var(--accent-white);
+        padding-left: 20px;
+        position: relative;
+        margin-bottom: 0.5rem;
+        line-height: 1.7;
+      }
+
+      .legal-page ul li::before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: var(--pacific-blue);
+      }
+
+      .legal-page ul ul {
+        margin-top: 0.5rem;
+      }
+
+      .legal-page ul ul li::before {
+        content: "•";
+        color: var(--muted-olive);
+      }
+
+      .legal-page a {
+        color: var(--pacific-blue);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.3s;
+      }
+
+      .legal-page a:hover {
+        border-bottom-color: var(--pacific-blue);
+      }
+
+      .legal-page footer {
+        margin-top: auto;
+      }
+
+      @media (max-width: 768px) {
+        .legal-page {
+          margin: 100px 20px 40px;
+          padding: 40px 30px;
+        }
+
+        .legal-page h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="mesh-canvas"></canvas>
+    <video id="webcam" autoplay playsinline></video>
+
+    <nav>
+      <div class="logo">
+        <span id="logo-text">É Collective</span>
+        <span class="cursor">|</span>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="imprint.html">Imprint</a>
+      </div>
+      <div class="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </nav>
+
+    <main class="legal-page">
+      <h1>Privacy Policy</h1>
+      <p class="last-updated">Last updated: April 2026</p>
+
+      <section>
+        <h2>1. Controller</h2>
+        <p>The controller within the meaning of the General Data Protection Regulation (GDPR) is:</p>
+        <p><strong>E collective</strong><br />
+        Address Gai 2<br />
+        Yerevan, Armenia<br />
+        <strong>Email:</strong> <a href="mailto:e.collective@aol.com">e.collective@aol.com</a></p>
+      </section>
+
+      <section>
+        <h2>2. Data We Collect and Why</h2>
+        
+        <h3>2.1 Webcam Access (MediaPipe)</h3>
+        <p>Our website uses MediaPipe Hands technology to enable interactive hand-tracking features. When you grant camera permission:</p>
+        <ul>
+          <li><strong>Data processed:</strong> Video images from your webcam</li>
+          <li><strong>Purpose:</strong> To enable the interactive 3D mesh deformation feature</li>
+          <li><strong>Legal basis:</strong> Your consent (Art. 6(1)(a) GDPR) — you actively grant camera permission</li>
+          <li><strong>Data retention:</strong> Video data is processed in real-time only and is <strong>not stored, transmitted, or retained</strong> on any server</li>
+        </ul>
+
+        <h3>2.2 Google Fonts</h3>
+        <p>We use Google Fonts to display fonts:</p>
+        <ul>
+          <li><strong>Data processed:</strong> Your IP address when Google Fonts are loaded</li>
+          <li><strong>Purpose:</strong> Displaying custom typography</li>
+          <li><strong>Legal basis:</strong> Our legitimate interest (Art. 6(1)(f) GDPR) in an appealing website design</li>
+          <li><strong>Third-party provider:</strong> Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland</li>
+          <li><strong>Privacy policy:</strong> <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">https://policies.google.com/privacy</a></li>
+        </ul>
+
+        <h3>2.3 Third-Party Scripts (CDN)</h3>
+        <p>We load Three.js and MediaPipe libraries from public CDN networks:</p>
+        <ul>
+          <li><strong>Data processed:</strong> Standard access logs containing IP address and browser information</li>
+          <li><strong>Purpose:</strong> Delivering library code to your browser</li>
+          <li><strong>Legal basis:</strong> Our legitimate interest (Art. 6(1)(f) GDPR) in using proven open-source libraries</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>3. No Cookies</h2>
+        <p>We do not use cookies, tracking cookies, or similar technologies on this website.</p>
+      </section>
+
+      <section>
+        <h2>4. Your Rights</h2>
+        <p>Under GDPR, you have the following rights regarding your personal data:</p>
+        <ul>
+          <li><strong>Right of access (Art. 15 GDPR):</strong> You can request information about your stored data</li>
+          <li><strong>Right to rectification (Art. 16 GDPR):</strong> You can request correction of inaccurate data</li>
+          <li><strong>Right to erasure (Art. 17 GDPR):</strong> You can request deletion of your data ("right to be forgotten")</li>
+          <li><strong>Right to restriction of processing (Art. 18 GDPR):</strong> You can request limited processing of your data</li>
+          <li><strong>Right to data portability (Art. 20 GDPR):</strong> You can receive your data in a structured format</li>
+          <li><strong>Right to object (Art. 21 GDPR):</strong> You can object to processing based on legitimate interest</li>
+          <li><strong>Right to lodge a complaint:</strong> You can file a complaint with a supervisory authority (e.g., your local data protection authority)</li>
+        </ul>
+        <p>To exercise your rights, contact us at <strong>e.collective@aol.com</strong>.</p>
+      </section>
+
+      <section>
+        <h2>5. Data Security</h2>
+        <p>We implement appropriate technical and organizational measures to protect your data. However, no internet transmission is completely secure, and we cannot guarantee absolute security.</p>
+      </section>
+
+      <section>
+        <h2>6. Changes to This Policy</h2>
+        <p>We may update this privacy policy periodically. The latest version will always be available on this page with a revised "Last updated" date.</p>
+      </section>
+
+      <section>
+        <h2>7. Contact</h2>
+        <p>For data protection inquiries, contact us at:</p>
+        <p><strong>Email:</strong> <a href="mailto:e.collective@aol.com">e.collective@aol.com</a></p>
+      </section>
+    </main>
+
+    <footer>© 2026 É collective. Built with Three.js & MediaPipe. <a href="imprint.html">Imprint</a> | <a href="privacy.html">Privacy Policy</a></footer>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Imprint - É Collective</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .legal-page {
+        max-width: 800px;
+        margin: 120px auto 60px;
+        padding: 60px;
+        background: var(--glass-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        position: relative;
+        z-index: 1;
+        flex: 1;
+      }
+
+      .legal-page h1 {
+        font-size: 2.5rem;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        background: var(--accent-white);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .last-updated {
+        color: var(--pacific-blue);
+        font-size: 0.85rem;
+        margin-bottom: 3rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .legal-page section {
+        padding: 0;
+        margin-bottom: 2.5rem;
+        border: none;
+        background: transparent;
+        backdrop-filter: none;
+      }
+
+      .legal-page h2 {
+        font-size: 1.1rem;
+        color: var(--muted-olive);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .legal-page p {
+        color: var(--accent-white);
+        line-height: 1.8;
+      }
+
+      .legal-page a {
+        color: var(--pacific-blue);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.3s;
+      }
+
+      .legal-page a:hover {
+        border-bottom-color: var(--pacific-blue);
+      }
+
+      .legal-page footer {
+        margin-top: auto;
+      }
+
+      @media (max-width: 768px) {
+        .legal-page {
+          margin: 100px 20px 40px;
+          padding: 40px 30px;
+        }
+
+        .legal-page h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="mesh-canvas"></canvas>
+    <video id="webcam" autoplay playsinline></video>
+
+    <nav>
+      <div class="logo">
+        <span id="logo-text">É Collective</span>
+        <span class="cursor">|</span>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+      <div class="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </nav>
+
+    <main class="legal-page">
+      <h1>Imprint</h1>
+      <p class="last-updated">Last updated: April 2026</p>
+
+      <section>
+        <h2>Information pursuant to § 5 TMG</h2>
+        <p><strong>E collective</strong><br />
+        Address Gai 2<br />
+        Yerevan, Armenia</p>
+        
+        <p><strong>Email:</strong> <a href="mailto:e.collective@aol.com">e.collective@aol.com</a></p>
+      </section>
+
+      <section>
+        <h2>Represented by</h2>
+        <p>E collective</p>
+      </section>
+
+      <section>
+        <h2>Register Entry</h2>
+        <p><strong>Register Court:</strong> N/A<br />
+        <strong>Register Number:</strong> N/A</p>
+      </section>
+
+      <section>
+        <h2>VAT Identification Number</h2>
+        <p><strong>VAT ID:</strong> N/A</p>
+      </section>
+
+      <section>
+        <h2>Dispute Resolution</h2>
+        <p>The EU Commission has created an internet platform for online dispute resolution. You can reach it here: <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr/</a>.</p>
+        <p>We are not willing or obligated to participate in dispute resolution proceedings before a consumer arbitration board.</p>
+      </section>
+    </main>
+
+    <footer>© 2026 É collective. Built with Three.js & MediaPipe. <a href="imprint.html">Imprint</a> | <a href="privacy.html">Privacy Policy</a></footer>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>
